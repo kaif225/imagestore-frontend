@@ -4,6 +4,7 @@ metadata:
   name: imagestorefrontend
 spec:
   replicas: 3
+  revisionHistoryLimit: 3
   selector:                    
     matchLabels:
       app: imagestorefrontend
@@ -14,6 +15,13 @@ spec:
     spec:                      
       containers:
        - name: imagestorefrontend          
-         image: kaifpersonal.azurecr.io/imagestorefrontend:latest  
+         image: kaifpersonal.azurecr.io/imagestorefrontend:latest
+         resources:
+           requests:
+             cpu: 100m
+             memory: 128Mi
+           limits:
+             cpu: 250m
+             memory: 256Mi
          ports:
           - containerPort: 3000
