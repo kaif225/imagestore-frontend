@@ -1,0 +1,66 @@
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    exclude:
+      - 'manifest/*'
+      - 'manifest/**'
+      - README.md
+
+resources:
+  - repo: self 
+
+variables:
+  dockerRegistryServiceConnection: '85263f02-66cb-4a93-8e7d-02b4e866acb0'
+  imageRepository: 'imagestorefrontend'
+  containerRegistry: 'kaifpersonal.azurecr.io'
+  dockerfilePath: 'app/Dockerfile'  
+  tag: '$(Build.BuildId)'
+  vmImageName: 'ubuntu-latest'
+  VITE_API_BASE_URL: 'https://api.practice4.xyz/api'
+  manifestFile: 'manifest/deployment.yml'
+
+stages:
+  - stage: Build 
+    displayName: Build and Push Stage
+    jobs:
+      - job: build 
+        displayName: build 
+        pool: 
+          vmImage: $(vmImageName)
+        steps:
+          - checkout: self
+            persistCredentials: true
+          
+          - script: |
+              echo "VITE_API_BASE_URL=$(VITE_API_BASE_URL)" > .env
+            displayName: Create .env file
+          
+          - task: Docker@2
+            displayName: build and push image to ACR registry 
+            inputs:
+              command: buildAndPush
+              repository: $(imageRepository)
+              dockerfile: $(dockerfilePath)
+              containerRegistry: $(dockerRegistryServiceConnection)
+              tags: |
+                $(tag)
+          
+          - script: |
+              echo "Updating deployment manifest with new image tag..."
+              sed -i "s#\(image: $(containerRegistry)/$(imageRepository):\).*#\1$(tag)#" $(manifestFile)
+              echo "Updated manifest:"
+              cat $(manifestFile)
+            displayName: Update image tag in deployment.yml
+          
+          - script: |
+              git config user.name "azure-pipelines"
+              git config user.email "azure-pipelines@devops"
+              git checkout -B main 
+              git add $(manifestFile)
+              git commit -m "Update image tag to $(tag) [skip ci]" || echo "No changes to commit"
+              git push origin main
+            displayName: Commit updated manifest
+            env:
+              SYSTEM_ACCESSTOKEN: $(System.AccessToken)

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imagestorefrontend
+spec:
+  replicas: 3
+  selector:                    
+    matchLabels:
+      app: imagestorefrontend
+  template:
+    metadata:
+      labels:
+        app: imagestorefrontend
+    spec:                      
+      containers:
+       - name: imagestorefrontend          
+         image: kaifpersonal.azurecr.io/imagestorefrontend:latest  
+         ports:
+          - containerPort: 3000
