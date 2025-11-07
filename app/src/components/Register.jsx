@@ -108,7 +108,10 @@ const Register = ({ onToggleMode }) => {
             value={formData.password}
             onChange={handleChange}
             required
+            minLength={6}
+            maxLength={16}
           />
+          <small className="form-hint">Password must be 6-16 characters</small>
         </div>
 
         <div className="form-group">
@@ -119,7 +122,10 @@ const Register = ({ onToggleMode }) => {
             value={formData.confirmPassword}
             onChange={handleChange}
             required
+            minLength={6}
+            maxLength={16}
           />
+          <small className="form-hint">Password must be 6-16 characters</small>
         </div>
 
         {error && <div className="error-message">{error}</div>}

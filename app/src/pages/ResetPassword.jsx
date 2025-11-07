@@ -65,7 +65,10 @@ const ResetPassword = () => {
                 name="newPassword"
                 value={formData.newPassword}
                 onChange={handleChange}
+                minLength={6}
+                maxLength={16}
                 required
+                placeholder="6-16 characters"
               />
             </div>
             <div className="form-group">
@@ -75,7 +78,10 @@ const ResetPassword = () => {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
+                minLength={6}
+                maxLength={16}
                 required
+                placeholder="6-16 characters"
               />
             </div>
             {message && (

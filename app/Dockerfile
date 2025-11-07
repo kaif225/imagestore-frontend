@@ -8,14 +8,14 @@ WORKDIR /app
 
 
 # Copy package files first (for better caching)
-COPY package*.json ./
+COPY package.json /app
 
 # Install dependencies
 RUN npm install
 
 # Copy source code
 COPY . .
-RUN echo "VITE_API_BASE_URL=/api" > .env
+RUN echo "VITE_API_BASE_URL=http://192.168.7.129:8007" > .env
 RUN npm run build 
 # Expose port 3000 (Vite default)
 EXPOSE 3000
