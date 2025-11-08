@@ -15,7 +15,7 @@ RUN npm install
 
 # Copy source code
 COPY . .
-RUN echo "VITE_API_BASE_URL=http://192.168.7.129:8007" > .env
+RUN echo "VITE_API_BASE_URL=/api" > .env
 RUN npm run build 
 # Expose port 3000 (Vite default)
 EXPOSE 3000
