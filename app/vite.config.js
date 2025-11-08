@@ -6,17 +6,35 @@ export default defineConfig({
   server: {
     port: 3000,
     host: '0.0.0.0',
-    allowedHosts: ['*']
+    allowedHosts: [
+      'web.kaiftech.xyz',
+      '.kaiftech.xyz',
+      'localhost',
+      '127.0.0.1'
+    ],
+    hmr: {
+      protocol: 'wss',
+      host: 'web.kaiftech.xyz',
+      clientPort: 443
+    },
+    // Increase timeout
+    middlewareMode: false,
   },
   build: {
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: true,
+    // Optimize chunk size
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom']
+        }
+      }
+    }
   },
-  // Add this resolve configuration
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
-  // Add this esbuild configuration
   esbuild: {
     loader: 'jsx',
     include: /src\/.*\.jsx?$/,
